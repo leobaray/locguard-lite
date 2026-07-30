@@ -1,5 +1,5 @@
 #!/bin/bash
-# LocGuard Lite — verification gate (6 stages).
+# LocGuard Lite — verification gate (7 stages).
 #
 # Lite is the free funnel to LocGuard Pro ($12). Until 2026-07-29 it was the
 # only published artifact of the studio with NO gate at all: test_verify_lite.gd
@@ -7,6 +7,15 @@
 #
 # WHAT THIS GATE IS FOR, in order of how much money each stage protects:
 #
+#   upsell   — the free addon must still REACH the paid product. Its entire
+#              conversion path is one node, the promo LinkButton at the bottom
+#              of the dock, and its destination was a string literal inside
+#              plugin.gd checked by nothing. Note this is the OPPOSITE
+#              direction from `funnel` below, which is about withholding paid
+#              rules; the two names are easy to confuse and neither covers the
+#              other. Lite could send every user nowhere — dead link, hidden
+#              button, a Label that merely looks like one — and stages 1-6
+#              would all be green.
 #   funnel   — Lite must stay a STRICT SUBSET of Pro. If Lite ever starts
 #              reporting placeholder-printf / bbcode-imbalance / orphan-key,
 #              we are giving away the $12 product for free and nothing else in
@@ -204,7 +213,83 @@ PY
   [ $? -eq 0 ] || FAILED=1
 fi
 
-# -------------------------------------------------------------- 5. published
+# ----------------------------------------------------------------- 5. upsell
+echo "== upsell (the free addon can still reach the paid product) =="
+
+# Lite is free for one commercial reason: to end with a click through to
+# LocGuard Pro. Nothing measured that until 30/07. Stage 4 is named `funnel`
+# but guards the other direction (don't give the $12 rules away), and stage 3
+# only asserts what the scanner finds — an addon whose promo link is dead,
+# hidden, aimed at the free CLI repo, or replaced by a Label that merely looks
+# like a link stays green on every other stage in this file.
+#
+# Measured on the SHIPPED bytes: $PROJ already holds the unzipped download, not
+# the worktree. The checker compiles the real plugin.gd against a stub base
+# class (EditorPlugin cannot be instantiated outside the editor) and asserts
+# the harness differs from the shipped file by exactly one line.
+if [ ! -d "${PROJ:-}" ]; then
+  fail "the runtime stage never built a project — cannot check the upsell path."
+else
+  cp test_upsell_lite.gd funnel.json "$PROJ/"
+  UOUT=$("$GODOT" --headless --path "$PROJ" --script test_upsell_lite.gd 2>&1)
+  URC=$?
+  printf '%s\n' "$UOUT" | grep -E '^(  (ok|FAIL|INFO)|FAILED-CHECKS)' | sed 's/^/  /'
+  if [ $URC -ne 0 ] || ! printf '%s\n' "$UOUT" | grep -q "UPSELL: ALL PASS"; then
+    printf '%s\n' "$UOUT" | grep -vE '^(  (ok|FAIL|INFO)|FAILED-CHECKS)' | sed 's/^/      /'
+    fail "the free addon does not reach the paid product."
+    echo "      Everything else in this suite can be green while Lite converts nobody."
+  else
+    echo "PASS: the shipped addon's dock still hands the user to $(python3 -c "import json;print(json.load(open('funnel.json'))['paid_url'])")"
+  fi
+
+  # And the checker must be able to fail — four ways, because four different
+  # things kill an upsell and one alarm wired to all of them proves nothing.
+  # Each seed must redden its OWN check (LG_UPSELL_EXPECT_FAIL enforces "that
+  # check and no other"), so a checker that just always fails cannot pass here.
+  while IFS=: read -r sname swant swhat; do
+    [ -n "$sname" ] || continue
+    SEEDP="$TMP/seed-$sname"
+    rm -rf "$SEEDP"; cp -r "$PROJ" "$SEEDP"
+    python3 - "$SEEDP/$ADDON/plugin.gd" "$sname" <<'PY' || { FAILED=1; continue; }
+import sys
+path, kind = sys.argv[1], sys.argv[2]
+src = open(path, encoding='utf-8').read()
+URI = 'promo.uri = "https://blobsmith.itch.io/locguard"'
+if kind == 'loop':
+    # the one typo that costs every sale: the paid page and the free CLI repo
+    # sit two lines apart in the README and end in the same word
+    old, new = URI, 'promo.uri = "https://github.com/leobaray/locguard"'
+elif kind == 'dead':
+    src = src.replace('var promo := LinkButton.new()', 'var promo := Label.new()')
+    old, new = '\t' + URI + '\n', ''
+elif kind == 'hidden':
+    old, new = URI, URI + '\n\tpromo.visible = false'
+elif kind == 'ignored':
+    old, new = URI, URI + '\n\tpromo.mouse_filter = Control.MOUSE_FILTER_IGNORE'
+else:
+    print('FAIL: unknown seed %s' % kind); sys.exit(1)
+if src.count(old) != 1:
+    print('FAIL: seed %s cannot be applied — plugin.gd no longer contains its anchor.' % kind)
+    print('      The seeds are how we know the upsell checks can fail. Re-anchor them.')
+    sys.exit(1)
+open(path, 'w', encoding='utf-8').write(src.replace(old, new, 1))
+PY
+    SOUT=$(LG_UPSELL_EXPECT_FAIL="$swant" "$GODOT" --headless --path "$SEEDP" --script test_upsell_lite.gd 2>&1)
+    if printf '%s\n' "$SOUT" | grep -q "UPSELL: SEED OK"; then
+      echo "PASS: seed '$sname' ($swhat) reddens $swant, and only $swant"
+    else
+      printf '%s\n' "$SOUT" | grep -E '^(  (ok|FAIL)|FAILED-CHECKS|SEED)' | sed 's/^/      /'
+      fail "seed '$sname' did not redden $swant alone — the upsell checks are not measuring what they claim."
+    fi
+  done <<'SEEDS'
+loop:destination:the promo points at the free CLI repo
+dead:cta-exists:a Label that only looks like a link
+hidden:visible-band:the promo is hidden
+ignored:cta-clickable:the promo ignores the mouse, pixel-perfect and unclickable
+SEEDS
+fi
+
+# -------------------------------------------------------------- 6. published
 echo "== published (what the Asset Library serves vs what we build) =="
 
 API=$(curl -s --max-time 20 "https://godotengine.org/asset-library/api/asset/$ASSET_ID")
@@ -248,7 +333,7 @@ PY
   fi
 fi
 
-# ------------------------------------------------------------------ 6. entry
+# ------------------------------------------------------------------ 7. entry
 echo "== entry (the listing we monitor is the listing we published) =="
 
 REPO_URL=$(git config --get remote.origin.url 2>/dev/null | sed 's/\.git$//;s|^git@github.com:|https://github.com/|')

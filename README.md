@@ -13,6 +13,13 @@ Verified headless against Godot 4.7.
 
 ## Install
 
+**Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's
+AssetLib tab, or install from
+[the listing](https://godotengine.org/asset-library/asset/5378). The download
+contains only `addons/locguard_lite/`, so nothing lands in your project root.
+
+Or manually:
+
 1. Copy `addons/locguard_lite` into your project's `addons/` folder.
 2. Project Settings → Plugins → enable "LocGuard Lite".
 3. Open the "LocGuard Lite" dock (bottom-right by default) and click

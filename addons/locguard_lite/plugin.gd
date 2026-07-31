@@ -39,7 +39,7 @@ func _build_dock() -> Control:
 	root.add_child(tree)
 
 	var promo := LinkButton.new()
-	promo.text = "Get LocGuard Pro — placeholder QA, BBCode checks, CI gate →"
+	promo.text = "Get LocGuard Pro →"
 	promo.uri = "https://blobsmith.itch.io/locguard"
 	root.add_child(promo)
 

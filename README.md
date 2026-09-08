@@ -30,6 +30,16 @@ been measured end to end.
   with [`verify_locale_change.sh`](docs/verify_locale_change.sh), which runs
   every claim on your own binary.
 
+- **[Why the translation is not loading for my locale](docs/why-the-translation-is-not-loading-for-my-locale.md)**
+  — a CSV column headed `pt-br` does not import as Brazilian Portuguese: the
+  engine drops a lowercase country code, so it becomes plain `pt`, while `pt-BR`
+  (one capital letter apart) becomes `pt_BR`. A column headed `PT_BR` imports
+  without error into a file no locale can ever select. 22 claims run on 4.2, 4.3,
+  4.4 and 4.7 (22/22 on each), through the engine's own CSV importer, including
+  the ranking change in 4.4 that can alter what a `pt_PT` player reads with no
+  edit on your side. Comes with
+  [`verify_locale_matching.sh`](docs/verify_locale_matching.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

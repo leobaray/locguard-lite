@@ -40,6 +40,16 @@ been measured end to end.
   edit on your side. Comes with
   [`verify_locale_matching.sh`](docs/verify_locale_matching.sh).
 
+- **[Why editing `strings.csv` changes nothing in your game](docs/why-editing-strings-csv-changes-nothing.md)**
+  — the import usually worked and nothing loads the result: after importing a
+  CSV, `internationalization/locale/translations` is still empty, so `tr()`
+  returns the key in every locale with no error at all. And deleting a column
+  deletes nothing — the `.translation` it produced stays on disk, stays listed
+  in the project settings and keeps answering with the text of a column that no
+  longer exists, so a language you removed still ships. 14 claims run on 4.2,
+  4.3, 4.4 and 4.7 (14/14 on each), every import done by the binary under test.
+  Comes with [`verify_csv_reimport.sh`](docs/verify_csv_reimport.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

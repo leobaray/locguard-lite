@@ -178,3 +178,6 @@ Part of [LocGuard Lite](https://github.com/leobaray/locguard-lite) — a free,
 MIT-licensed Godot 4 addon that finds untranslated strings in your scenes and
 scripts before players do. Companion page:
 [why the locale change does not update the UI](why-the-locale-change-does-not-update-the-ui.md).
+Also measured: [why editing `strings.csv` changes nothing in your
+game](why-editing-strings-csv-changes-nothing.md) — the import succeeds and
+nothing loads the result, and deleting a column leaves the language shipping.

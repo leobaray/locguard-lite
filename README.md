@@ -19,6 +19,17 @@ Identifier "LocGuardLiteCore" not declared in the current scope`), and the fixtu
 version 6. Fixing only the first would not produce a green 4.2 run. Nothing on 4.2 has
 been measured end to end.
 
+## Measured docs
+
+- **[Why the locale change does not update the UI](docs/why-the-locale-change-does-not-update-the-ui.md)**
+  — the three answers the forums give to "I called `TranslationServer.set_locale()`
+  and nothing on screen changed" are not measured. This one is: 16 claims run on
+  4.3, 4.4 and 4.7 (16/16 on each), including the trap that a locale nobody
+  translated does *not* show the keys — it silently serves the fallback locale,
+  so the screen looks fine in English and the wrong locale is invisible. Comes
+  with [`verify_locale_change.sh`](docs/verify_locale_change.sh), which runs
+  every claim on your own binary.
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

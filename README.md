@@ -50,6 +50,17 @@ been measured end to end.
   4.3, 4.4 and 4.7 (14/14 on each), every import done by the binary under test.
   Comes with [`verify_csv_reimport.sh`](docs/verify_csv_reimport.sh).
 
+- **[Why a row in `strings.csv` never reaches the player](docs/why-a-row-in-strings-csv-never-reaches-the-player.md)**
+  — a blank cell does not ship a blank string, it ships the KEY, which is
+  indistinguishable from a key that was never in the CSV. Two rows with the same
+  key silently become one (the last wins, no error, no warning). Keys are never
+  trimmed. And `tr()` accepts a context while `tr_n()` accepts a plural and a
+  count: against a CSV-backed translation all three are discarded, so two "Open"
+  strings disambiguated by context collapse into one and every plural returns
+  the singular. 24 claims run on 4.2, 4.3, 4.4 and 4.7 (24/24 on each), every
+  import done by the binary under test. Comes with
+  [`verify_csv_silent_drops.sh`](docs/verify_csv_silent_drops.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

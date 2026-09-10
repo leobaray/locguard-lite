@@ -136,6 +136,20 @@ been measured end to end.
   on the older binaries. 23 claims, run on 4.2, 4.3, 4.4 and 4.7. Comes with
   [`verify_context.sh`](docs/verify_context.sh).
 
+- **[Why the CSV your spreadsheet saved translates nothing](docs/why-the-csv-your-spreadsheet-saved-translates-nothing.md)**
+  — the same table saved nine ways by a spreadsheet, and what each one ships. A
+  byte order mark and CRLF line endings, the two everyone blames, change nothing.
+  A semicolon delimiter and UTF-16 produce no `.translation` file at all, so the
+  language is simply absent from the exported build. The expensive one is ANSI /
+  Latin-1: it imports successfully and every accented word comes back altered —
+  on 4.2-4.4 a trailing `á` becomes a plain space, so `Olá` ships as `Ol`, with
+  no error at lookup time and the ASCII columns of the same file untouched. And
+  the header row is the locale list, spelled literally: `keys,en, pt` creates a
+  locale named `" pt"` that loads, reports as loaded, and never matches
+  `set_locale("pt")`. A trailing comma is dropped from 4.3 on and voids the whole
+  file on 4.2. 22 claims, run on 4.2, 4.3, 4.4 and 4.7. Comes with
+  [`verify_spreadsheet_csv.sh`](docs/verify_spreadsheet_csv.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

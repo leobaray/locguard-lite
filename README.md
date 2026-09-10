@@ -106,6 +106,21 @@ been measured end to end.
   and loading it *next to* the CSV does not. 18 claims, run on 4.2, 4.3, 4.4 and
   4.7. Comes with [`verify_plurals.sh`](docs/verify_plurals.sh).
 
+- **[Why your game starts in the wrong language on someone else's machine](docs/why-your-game-starts-in-the-wrong-language.md)**
+  — `TranslationServer.get_locale()` reports what the machine asked for, not what
+  the engine is serving: on a `pt_BR` machine with only a `pt` column it answers
+  `pt_BR`, a string that is not in `get_loaded_locales()`, so the membership test
+  every language menu is written with is comparing a request to a shipping list.
+  On a machine with no matching language at all it still answers that machine's
+  locale while the screen shows the fallback. `OS.get_locale_language()` returns
+  the literal `C` on build servers and minimal images, so `== "en"` is false
+  there. Only `LANG` is read — `LC_ALL`, `LANGUAGE` and `LC_MESSAGES` do nothing,
+  alone or beside it, so a locale you reproduced by exporting `LC_ALL` was never
+  reproduced. `locale/fallback` naming a locale you do not ship puts raw keys on
+  screen for every unmatched player, silently. 26 claims across 16 process
+  launches, run on 4.2, 4.3, 4.4 and 4.7. Comes with
+  [`verify_startup_locale.sh`](docs/verify_startup_locale.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

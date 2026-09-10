@@ -121,6 +121,21 @@ been measured end to end.
   launches, run on 4.2, 4.3, 4.4 and 4.7. Comes with
   [`verify_startup_locale.sh`](docs/verify_startup_locale.sh).
 
+- **[Why the context you pass to `tr()` changes nothing](docs/why-the-context-you-pass-to-tr-changes-nothing.md)**
+  — the second argument of `tr()` means two different things depending on which
+  importer answered. A CSV translation has no context table, so it does not miss
+  on a context, it discards it and returns the one string it has. A `.po` keeps
+  `msgctxt`, and a context it does not carry returns the raw key instead of
+  falling back to the no-context entry sitting in the same file. Ship both and
+  the answer is decided by the order `project.godot` lists them: CSV first makes
+  every contextual entry in your catalogue unreachable, and hides a `msgctxt`
+  you never wrote until someone reorders the list. A CSV column headed `context`
+  imports as a *language* named `context` that the engine will happily select.
+  Two API shifts land here too: a `.po` is `TranslationPO` on 4.2-4.4 and plain
+  `Translation` on 4.7, and `get_translated_message_list()` shows 1 of 3 entries
+  on the older binaries. 23 claims, run on 4.2, 4.3, 4.4 and 4.7. Comes with
+  [`verify_context.sh`](docs/verify_context.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

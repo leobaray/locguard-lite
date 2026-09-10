@@ -91,6 +91,21 @@ been measured end to end.
   any other way. Comes with
   [`verify_translation_fallback.sh`](docs/verify_translation_fallback.sh).
 
+- **[Why `tr_n()` always returns the singular](docs/why-tr_n-always-returns-the-singular.md)**
+  — the plural is in `strings.csv`, in its own row, spelled the way the call
+  spells it, and `tr_n("APPLE", "APPLES", 5)` returns the singular anyway. The
+  CSV importer produces an `OptimizedTranslation`, which has no plural table, so
+  there is nothing for the count to select and every count from 0 to 1000 gets
+  form one. Both rows are imported and `tr()` reaches either of them the whole
+  time, which is why the import check always says everything is fine. A key that
+  is in no translation fails the opposite way — untranslated source *plural* at
+  n=5 — so the two screens tell you which cause to rule out. `add_plural_message()`
+  exists on 4.2, 4.3 and 4.4 and silently discards what you pass it; on 4.7 it
+  works, and on 4.7 a plain `Translation` also starts answering the untranslated
+  English plural where 4.4 answered the translated singular. A `.po` fixes it,
+  and loading it *next to* the CSV does not. 18 claims, run on 4.2, 4.3, 4.4 and
+  4.7. Comes with [`verify_plurals.sh`](docs/verify_plurals.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

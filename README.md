@@ -75,6 +75,22 @@ been measured end to end.
   of the feature. Ends with the one `grep` that finds it in your project. Comes
   with [`verify_auto_translate.sh`](docs/verify_auto_translate.sh).
 
+- **[Why your untranslated string comes out in another language](docs/why-your-untranslated-string-comes-out-in-another-language.md)**
+  — a missing translation does not look missing. Every Godot 4 project boots
+  with `internationalization/locale/fallback` set to `en`, so an untranslated
+  string is served in the fallback language instead of showing its key, and a
+  half-translated screen looks like one bug per string rather than one missing
+  row. An empty cell is stored but counts as absent at lookup, so a blank
+  translation shows fluent text in the wrong language and has no visible
+  symptom at all. The fallback is a locale and not a search order, the setting
+  is read once at startup so writing it at runtime does nothing, and
+  `TranslationServer.set_fallback()` — the answer every forum gives — does not
+  exist in Godot 4 and takes the whole script down with a parse error. 12 claims
+  on the default boot and 13 on each of two more, run on 4.2, 4.3, 4.4 and 4.7,
+  every binary booted three times because a startup setting cannot be measured
+  any other way. Comes with
+  [`verify_translation_fallback.sh`](docs/verify_translation_fallback.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

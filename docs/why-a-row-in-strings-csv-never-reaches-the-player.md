@@ -153,3 +153,6 @@ would have to be built on.
   — a column headed `pt-br` does not import as Brazilian Portuguese.
 - [Why the locale change does not update the UI](why-the-locale-change-does-not-update-the-ui.md)
   — `TranslationServer.set_locale()` and what does not move when you call it.
+- [Why your untranslated string comes out in another language](why-your-untranslated-string-comes-out-in-another-language.md)
+  — the same blank cell in a non-fallback column, where it shows fluent text in
+  the wrong language instead of the key.

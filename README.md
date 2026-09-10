@@ -61,6 +61,20 @@ been measured end to end.
   import done by the binary under test. Comes with
   [`verify_csv_silent_drops.sh`](docs/verify_csv_silent_drops.sh).
 
+- **[Why a key that IS in your CSV still shows up untranslated](docs/why-a-key-in-your-csv-still-shows-untranslated.md)**
+  — `tr()` and the text the node actually shows do not go through the same door.
+  `tr()` always translates; the node's own `text` goes through `atr()`, which
+  obeys `auto_translate_mode`, so the same node answers two different things in
+  the same frame and the one you typed into your script is the one that lies.
+  One ancestor set to Disabled takes out a whole subtree with no error and no
+  warning, the deprecated `auto_translate` bool set back to `true` writes
+  `ALWAYS` instead of `INHERIT` and permanently opts the node out of its
+  parent, and a change reaches already-drawn descendants only on the next
+  frame — two identical sibling subtrees, same code, opposite answers. 23
+  claims run on 4.3 and 4.4, 24 on 4.7 and a separate 6 on 4.2, which has none
+  of the feature. Ends with the one `grep` that finds it in your project. Comes
+  with [`verify_auto_translate.sh`](docs/verify_auto_translate.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

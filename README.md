@@ -180,6 +180,20 @@ been measured end to end.
   `Control.atr()` are reported as skipped, never as passed. Comes with
   [`verify_dialog_buttons.sh`](docs/verify_dialog_buttons.sh).
 
+- **[Why your translation shows boxes, or nothing at all](docs/why-your-translation-shows-boxes-or-nothing.md)**
+  — the table is fine and the font is not. The font the engine ships with
+  covers Latin, Cyrillic and Greek and has no glyph for Han, Hiragana, Thai or
+  Arabic, and its Hebrew coverage changes between 4.4 and 4.5. When a font
+  cannot draw a character Godot borrows one from the operating system it is
+  running on, so the glyph on your screen comes from your machine and not from
+  your project: the same build shows text on yours and empty boxes on a
+  player's. Nothing catches it — `tr()` returns the right string,
+  `get_string_size()` returns a positive width, a `Label` reserves room for it,
+  and the engine prints no error or warning at all. 26 assertions plus 3
+  machine-dependent notes, run on 4.2, 4.3, 4.4 and 4.7 — 26/26 on each, no
+  skips. Comes with
+  [`verify_font_coverage.sh`](docs/verify_font_coverage.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

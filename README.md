@@ -165,6 +165,21 @@ been measured end to end.
   per contributor. 18 claims, run on 4.2, 4.3, 4.4 and 4.7. Comes with
   [`verify_generated_files.sh`](docs/verify_generated_files.sh).
 
+- **[Why the OK and Cancel buttons stay in English](docs/why-the-ok-button-stays-in-english.md)**
+  — those strings are not locked inside the engine. The engine puts an English
+  literal on the button and the button draws it through the same auto-translate
+  path your own labels use, so a row keyed exactly `OK` does translate it. Two
+  things go wrong. The property lies about the screen: `button.text` stays `OK`
+  forever, so debugging by printing tells you the translation failed when it
+  did not, while `button.atr(button.text)` returns the translated string in the
+  same frame. And the key changes between engine versions: the `FileDialog`
+  accept button is `OK` on the 4.2 and 4.3 line and `Save` on 4.4 and later, so
+  a project that translated that button on 4.3 goes back to English on 4.4 with
+  no error, no warning and no failed import. 23 claims, run on 4.2, 4.3, 4.4
+  and 4.7 — 21/21 on 4.3, 4.4 and 4.7, and on 4.2 the claims that need
+  `Control.atr()` are reported as skipped, never as passed. Comes with
+  [`verify_dialog_buttons.sh`](docs/verify_dialog_buttons.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

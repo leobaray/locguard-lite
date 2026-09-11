@@ -150,6 +150,21 @@ been measured end to end.
   file on 4.2. 22 claims, run on 4.2, 4.3, 4.4 and 4.7. Comes with
   [`verify_spreadsheet_csv.sh`](docs/verify_spreadsheet_csv.sh).
 
+- **[Why the translation works for you and not for your teammate](docs/why-the-translation-works-for-you-and-not-for-your-teammate.md)**
+  — the running game never reads your CSV. The import writes one
+  `.translation` per language column into your source tree, and those are the
+  only files that matter at run time: delete the `.import` file, or the CSV
+  itself, and the game still translates. Delete the `.translation` files and it
+  ships keys. The silent failure is a stale `.translation` beside an edited CSV,
+  which serves last week's text with no error and no warning, so the person with
+  the editor open never sees it and the build server always does. Across
+  versions the generated file is one-directional: 4.2 refuses a file written by
+  4.3, 4.4 or 4.7 and falls back to the key. And on 4.2 and 4.3 the import is
+  not reproducible — three reimports of the same table, with the uid unchanged,
+  wrote three different files, so tracking them means an unmergeable binary diff
+  per contributor. 18 claims, run on 4.2, 4.3, 4.4 and 4.7. Comes with
+  [`verify_generated_files.sh`](docs/verify_generated_files.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

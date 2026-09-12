@@ -238,6 +238,26 @@ been measured end to end.
   inside the running `.pck` on 4.2, 4.3, 4.4 and 4.7 — 12/12 on each, no
   skips. Comes with [`verify_export_pack.sh`](docs/verify_export_pack.sh).
 
+- **[Why your Arabic build mirrors the whole interface, or refuses
+  to](docs/why-your-arabic-build-comes-out-mirrored.md)** — the Arabic text is
+  shaped and reversed correctly; the box around it is what flips. Selecting a
+  right-to-left locale mirrors every `Control` in the game with no code and no
+  setting, in the same frame, with nothing printed — and
+  `NOTIFICATION_LAYOUT_DIRECTION_CHANGED` exists on all four versions and is
+  never delivered, so the notification you would hook does not fire. The
+  condition changed: for a right-to-left locale that no loaded translation
+  covers, 4.2/4.3/4.4 leave the interface unmirrored and 4.7 mirrors it, so the
+  same build gives two players opposite layouts and upgrading mirrors exactly
+  the locales your translators have not finished. Hand-rolled mirroring is
+  applied on top of the engine's and cancels it; textures are moved and never
+  flipped, so the back arrow changes side and keeps pointing left;
+  `LAYOUT_DIRECTION_SYSTEM_LOCALE` reads the player's OS, not your language
+  menu; and `force_right_to_left_layout_direction`, the switch built to preview
+  all this, works on 4.2 and has done nothing since 4.3 while still reading
+  back as `true`. Ends with the assert to put in your own suite. 14 assertions
+  on 4.2, 4.3, 4.4 and 4.7 — 14/14 on 4.4 and 4.7, 13/13 with one skip on 4.2
+  and 4.3. Comes with [`verify_rtl_layout.sh`](docs/verify_rtl_layout.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

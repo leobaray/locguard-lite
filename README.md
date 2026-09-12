@@ -223,6 +223,21 @@ been measured end to end.
   4.2, 4.3, 4.4 and 4.7 — 18/18 on each, no skips. Comes with
   [`verify_richtext_bbcode.sh`](docs/verify_richtext_bbcode.sh).
 
+- **[Why your exported game is not translated and the editor says everything is
+  fine](docs/why-your-exported-game-is-not-translated.md)** — your project
+  declares its translations in `project.godot`, so no scene depends on them.
+  Pick "export selected scenes (and dependencies)" and the exporter, walking
+  that dependency graph, packs none of them: the build boots with zero locales
+  loaded and every `tr()` returns its key, while the export exits 0 and never
+  says the word "translation". An exclude filter that matches `*.translation`
+  does the same, and leaving out ONE locale is worse — that player silently
+  reads the source language on a screen that looks finished. Both broken
+  projects translate perfectly when run from the project folder, so no editor
+  test can see it. Includes the two-line check to run on the artifact and the
+  preset field that fixes it. 12 assertions measured around the export and
+  inside the running `.pck` on 4.2, 4.3, 4.4 and 4.7 — 12/12 on each, no
+  skips. Comes with [`verify_export_pack.sh`](docs/verify_export_pack.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

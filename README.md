@@ -209,6 +209,20 @@ been measured end to end.
   4.2, 4.3, 4.4 and 4.7 — 21/21 on each, no skips. Comes with
   [`verify_format_placeholders.sh`](docs/verify_format_placeholders.sh).
 
+- **[Why your RichTextLabel shows the key instead of the translation](docs/why-your-richtextlabel-shows-the-key-instead-of-the-translation.md)**
+  — the node has two doors for text and only one of them is translated. `text`
+  is looked up as one whole string, so `[b]GREET[/b]` is a key nobody wrote
+  down and the player reads `GREET`, in bold, with no error; `append_text()`
+  and `add_text()` are never looked up at all, so the same key one line later
+  arrives raw, and `.text` reports neither of the two answers on screen. That
+  forces your markup into the translator's spreadsheet, where a `[b]` closed
+  with `[/i]` ships the literal tag into the sentence and the import says
+  nothing. Worst of it: a locale change DELETES everything that came in
+  through `append_text()` — the chat log, the quest journal, the combat log —
+  and on 4.2 it empties a code-built label completely. 18 assertions run on
+  4.2, 4.3, 4.4 and 4.7 — 18/18 on each, no skips. Comes with
+  [`verify_richtext_bbcode.sh`](docs/verify_richtext_bbcode.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

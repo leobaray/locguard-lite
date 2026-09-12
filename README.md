@@ -194,6 +194,21 @@ been measured end to end.
   skips. Comes with
   [`verify_font_coverage.sh`](docs/verify_font_coverage.sh).
 
+- **[Why your translated line comes out empty, or as another line's text](docs/why-your-translated-line-comes-out-empty.md)**
+  — the row is there, `tr()` returns it, and the `%` that fills it fails,
+  because the translator moved the placeholders where their language puts
+  them, or deleted one half of a doubled `%%`, or just wrote `100% sicher` in
+  ordinary prose. What the player gets is not an error: on a typed call site
+  the empty string, so the line is absent and the layout closes up; on an
+  untyped one `null`, whose assignment to `label.text` raises and stops the
+  rest of that `_ready()`; and on 4.2 and 4.3 a string belonging to another
+  part of the program, so the screen shows text from somewhere else. Nothing
+  compares a translation's placeholders with its source column at import time
+  or any other time, the Output wording differs between call sites and changed
+  in 4.4, and a `%d` turned into `%s` never fails at all. 21 assertions run on
+  4.2, 4.3, 4.4 and 4.7 — 21/21 on each, no skips. Comes with
+  [`verify_format_placeholders.sh`](docs/verify_format_placeholders.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

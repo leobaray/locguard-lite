@@ -291,6 +291,17 @@ been measured end to end.
   markup intact, measured too. 13 assertions, 13/13 on 4.2, 4.3, 4.4 and 4.7.
   Comes with [`verify_pseudolocalization.sh`](docs/verify_pseudolocalization.sh).
 
+- **[Why your Chinese, Japanese or Thai text does not
+  wrap](docs/why-your-chinese-japanese-or-thai-text-does-not-wrap.md)** — the
+  engine does break text with no spaces: Chinese between characters, `。` and
+  `っ` kept off the start of a line, Thai between dictionary words, in every
+  autowrap mode and with no `language` set. What breaks it is around that: a
+  Label's `autowrap_mode` defaults to off, `get_line_count()` says `1` until a
+  frame has passed, and a default export packs none of the ~4.5 MB break data
+  the editor has built in (`include_text_server_data` is off). 12 assertions,
+  12/12 on 4.2, 4.3, 4.4 and 4.7. Comes with
+  [`verify_cjk_line_breaking.sh`](docs/verify_cjk_line_breaking.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

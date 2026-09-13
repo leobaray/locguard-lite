@@ -258,6 +258,18 @@ been measured end to end.
   on 4.2, 4.3, 4.4 and 4.7 — 14/14 on 4.4 and 4.7, 13/13 with one skip on 4.2
   and 4.3. Comes with [`verify_rtl_layout.sh`](docs/verify_rtl_layout.sh).
 
+- **[Why your localized image or voice line is the wrong
+  one](docs/why-your-localized-image-or-voice-line-is-the-wrong-one.md)** —
+  images and audio are localized with Remaps, not `tr()`, and switching the
+  language already reloads what you hold, scenes and `preload()` included. What
+  fails is quiet: a remap key written without `res://` is ignored without a
+  word; a missing target falls back to the original with only a warning; a file
+  listed only for `pt_BR` is served to `pt` and `pt_PT` too; an entry added
+  through `ProjectSettings.set_setting` at runtime is never read; and an
+  uncached `CACHE_MODE_IGNORE` copy stays put on 4.2 but is overwritten by the
+  language switch on 4.3+. 15 assertions, 15/15 on 4.2, 4.3, 4.4 and 4.7. Comes
+  with [`verify_resource_remaps.sh`](docs/verify_resource_remaps.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

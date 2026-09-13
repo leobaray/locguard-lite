@@ -281,6 +281,16 @@ been measured end to end.
   measured too. 12 assertions, 12/12 on 4.2, 4.3, 4.4 and 4.7. Comes with
   [`verify_number_format.sh`](docs/verify_number_format.sh).
 
+- **[Why pseudolocalization hides your missing
+  translations](docs/why-pseudolocalization-hides-your-missing-translations.md)**
+  — the built-in switch accents strings that are in no translation table too,
+  so untranslated text looks translated. It also turns `[b]` into `[ḅ]`, breaks
+  `{name}` for `format()`, skips `tr_n()` entirely, and at the default
+  `expansion_ratio` of 0 adds only two brackets of length. Includes a 25-line
+  `Translation` wrapper that pseudolocalizes only real translations and keeps
+  markup intact, measured too. 13 assertions, 13/13 on 4.2, 4.3, 4.4 and 4.7.
+  Comes with [`verify_pseudolocalization.sh`](docs/verify_pseudolocalization.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's

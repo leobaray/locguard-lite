@@ -270,6 +270,17 @@ been measured end to end.
   language switch on 4.3+. 15 assertions, 15/15 on 4.2, 4.3, 4.4 and 4.7. Comes
   with [`verify_resource_remaps.sh`](docs/verify_resource_remaps.sh).
 
+- **[Why your numbers ignore the player's
+  language](docs/why-your-numbers-ignore-the-players-language.md)** — Godot
+  translates text, not numbers: `str()`, `"%.2f"` and `tr()` give `1234.5` in
+  every locale, and `format_number` only swaps digits (Arabic, Persian,
+  Bengali) — no grouping, no decimal comma, and it ignores `set_locale()` unless
+  you pass the language. A German player's `1234,5` reads as `1234`, and
+  `1.234,5` as `1.234`, both without an error. `TranslationServer.format_number`
+  exists only on 4.7 and does the same. Includes a 30-line format/parse recipe,
+  measured too. 12 assertions, 12/12 on 4.2, 4.3, 4.4 and 4.7. Comes with
+  [`verify_number_format.sh`](docs/verify_number_format.sh).
+
 ## Install
 
 **Godot Asset Library** (recommended) — search "LocGuard Lite" in the editor's
